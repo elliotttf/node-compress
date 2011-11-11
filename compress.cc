@@ -13,6 +13,7 @@ using namespace node;
 
 class Gzip : public ObjectWrap {
  public:
+  static Persistent<FunctionTemplate> s_ct;
   static void
   Initialize (v8::Handle<v8::Object> target)
   {
@@ -20,11 +21,13 @@ class Gzip : public ObjectWrap {
 
     Local<FunctionTemplate> t = FunctionTemplate::New(New);
 
-    t->InstanceTemplate()->SetInternalFieldCount(1);
+    s_ct = Persistent<FunctionTemplate>::New(t);
+    s_ct->InstanceTemplate()->SetInternalFieldCount(1);
+    s_ct->SetClassName(String::NewSymbol("Gzip"));
 
-    NODE_SET_PROTOTYPE_METHOD(t, "init", GzipInit);
-    NODE_SET_PROTOTYPE_METHOD(t, "deflate", GzipDeflate);
-    NODE_SET_PROTOTYPE_METHOD(t, "end", GzipEnd);
+    NODE_SET_PROTOTYPE_METHOD(s_ct, "init", GzipInit);
+    NODE_SET_PROTOTYPE_METHOD(s_ct, "deflate", GzipDeflate);
+    NODE_SET_PROTOTYPE_METHOD(s_ct, "end", GzipEnd);
 
     target->Set(String::NewSymbol("Gzip"), t->GetFunction());
   }
@@ -208,8 +211,11 @@ class Gzip : public ObjectWrap {
 };
 
 
+Persistent<FunctionTemplate> Gzip::s_ct;
+
 class Gunzip : public ObjectWrap {
  public:
+  static Persistent<FunctionTemplate> s_ct;
   static void
   Initialize (v8::Handle<v8::Object> target)
   {
@@ -217,11 +223,13 @@ class Gunzip : public ObjectWrap {
 
     Local<FunctionTemplate> t = FunctionTemplate::New(New);
 
-    t->InstanceTemplate()->SetInternalFieldCount(1);
+    s_ct = Persistent<FunctionTemplate>::New(t);
+    s_ct->InstanceTemplate()->SetInternalFieldCount(1);
+    s_ct->SetClassName(String::NewSymbol("Gunzip"));
 
-    NODE_SET_PROTOTYPE_METHOD(t, "init", GunzipInit);
-    NODE_SET_PROTOTYPE_METHOD(t, "inflate", GunzipInflate);
-    NODE_SET_PROTOTYPE_METHOD(t, "end", GunzipEnd);
+    NODE_SET_PROTOTYPE_METHOD(s_ct, "init", GunzipInit);
+    NODE_SET_PROTOTYPE_METHOD(s_ct, "inflate", GunzipInflate);
+    NODE_SET_PROTOTYPE_METHOD(s_ct, "end", GunzipEnd);
 
     target->Set(String::NewSymbol("Gunzip"), t->GetFunction());
   }
@@ -365,6 +373,8 @@ class Gunzip : public ObjectWrap {
  z_stream strm;
 
 };
+
+Persistent<FunctionTemplate> Gunzip::s_ct;
 
 extern "C" void
 init (Handle<Object> target) 
