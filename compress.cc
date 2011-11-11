@@ -1,5 +1,5 @@
 #include <node.h>
-#include <node_events.h>
+#include <node_object_wrap.h>
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
@@ -11,7 +11,7 @@ using namespace v8;
 using namespace node;
 
 
-class Gzip : public EventEmitter {
+class Gzip : public ObjectWrap {
  public:
   static void
   Initialize (v8::Handle<v8::Object> target)
@@ -20,7 +20,6 @@ class Gzip : public EventEmitter {
 
     Local<FunctionTemplate> t = FunctionTemplate::New(New);
 
-    t->Inherit(EventEmitter::constructor_template);
     t->InstanceTemplate()->SetInternalFieldCount(1);
 
     NODE_SET_PROTOTYPE_METHOD(t, "init", GzipInit);
@@ -195,7 +194,7 @@ class Gzip : public EventEmitter {
   }
 
 
-  Gzip () : EventEmitter () 
+  Gzip () : ObjectWrap () 
   {
   }
 
@@ -209,7 +208,7 @@ class Gzip : public EventEmitter {
 };
 
 
-class Gunzip : public EventEmitter {
+class Gunzip : public ObjectWrap {
  public:
   static void
   Initialize (v8::Handle<v8::Object> target)
@@ -218,7 +217,6 @@ class Gunzip : public EventEmitter {
 
     Local<FunctionTemplate> t = FunctionTemplate::New(New);
 
-    t->Inherit(EventEmitter::constructor_template);
     t->InstanceTemplate()->SetInternalFieldCount(1);
 
     NODE_SET_PROTOTYPE_METHOD(t, "init", GunzipInit);
@@ -354,7 +352,7 @@ class Gunzip : public EventEmitter {
     return scope.Close(String::New(""));
   }
 
-  Gunzip () : EventEmitter () 
+  Gunzip () : ObjectWrap () 
   {
   }
 
