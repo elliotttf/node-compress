@@ -1,6 +1,9 @@
 import Options
+import os
 from os import unlink, symlink, popen
-from os.path import exists 
+from os.path import exists
+from os import mkdir
+from os.path import abspath
 
 srcdir = "."
 blddir = "build"
@@ -29,5 +32,7 @@ def shutdown():
   if Options.commands['clean']:
     if exists('compress.node'): unlink('compress.node')
   else:
-    if exists('build/default/compress.node') and not exists('compress.node'):
-      symlink('build/default/compress.node', 'compress.node')
+    if not exists('build/default'):
+      mkdir('build/default')
+    if exists('build/Release/compress.node') and not exists('build/default/compress.node'):
+      symlink(os.getcwd()+'/build/Release/compress.node', 'build/default/compress.node')
